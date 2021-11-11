@@ -8,12 +8,15 @@
     "start": "next start"
   },
   "dependencies": {
+    "@astrajs/collections": "^0.3.1",
     "@astrajs/rest": "^0.0.13",
-    "next": "10.0.3",
+    "next": "^11.1.2",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "axios": "^0.21.4"
   },
   "devDependencies": {
-    "@types/node": "^14.14.13"
+    "@types/node": "^14.14.13",
+    "axios": "^0.21.4"
   }
 }

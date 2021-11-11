@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function setupTable() {
+function setupEnvironmentVariables() {
   if [[ -z "$ASTRA_DB_APPLICATION_TOKEN" ]]; then
     echo "What is your Astra DB Application Token? 🚀"
     read -r ASTRA_DB_APPLICATION_TOKEN
@@ -29,42 +29,9 @@ function setupTable() {
     gp env ASTRA_DB_REGION="${ASTRA_DB_REGION// /}" &>/dev/null
   fi
 
-  # Create tables
-  echo "Creating Astra tables..."
-  TABLE_CREATION=$(curl --request POST \
-    --url "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v1/keyspaces/${ASTRA_DB_KEYSPACE}/tables" \
-    --header 'content-type: application/json' \
-    --header "x-cassandra-token: ${ASTRA_DB_APPLICATION_TOKEN}" \
-    --data '{"ifNotExists":true,"columnDefinitions":[{"static":false,"name":"name","typeDefinition":"text"},{"static":false,"name":"id","typeDefinition":"int"},{"static":false,"name":"actor_name","typeDefinition":"text"},{"static":false,"name":"house_name","typeDefinition":"text"},{"static":false,"name":"royal","typeDefinition":"boolean"}],"primaryKey":{"partitionKey":["name"]},"tableOptions":{"defaultTimeToLive":0},"name":"nextjs_characters"}')
 
-  curl --request POST \
-    --url "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v1/keyspaces/${ASTRA_DB_KEYSPACE}/tables/nextjs_characters/rows" \
-    --header 'content-type: application/json' \
-    --header "x-cassandra-token: ${ASTRA_DB_APPLICATION_TOKEN}" \
-    --data '{"columns":[{"name":"id","value":1},{"name":"name","value":"Jon Snow"},{"name":"actor_name","value":"Kit Harington"},{"name":"house_name","value":"Stark"},{"name":"royal","value":true}]}'
-
-    curl --request POST \
-    --url "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v1/keyspaces/${ASTRA_DB_KEYSPACE}/tables/nextjs_characters/rows" \
-    --header 'content-type: application/json' \
-    --header "x-cassandra-token: ${ASTRA_DB_APPLICATION_TOKEN}" \
-    --data '{"columns":[{"name":"id","value":2},{"name":"name","value":"Daenerys Targaryen"},{"name":"actor_name","value":"Emilia Clark"},{"name":"house_name","value":"Targaryen"},{"name":"royal","value":true}]}'
-
-    curl --request POST \
-    --url "https://${ASTRA_DB_ID}-${ASTRA_DB_REGION}.apps.astra.datastax.com/api/rest/v1/keyspaces/${ASTRA_DB_KEYSPACE}/tables/nextjs_characters/rows" \
-    --header 'content-type: application/json' \
-    --header "x-cassandra-token: ${ASTRA_DB_APPLICATION_TOKEN}" \
-    --data '{"columns":[{"name":"id","value":3},{"name":"name","value":"Tyrion Lannister"},{"name":"actor_name","value":"Peter Dinklage"},{"name":"house_name","value":"Lannister"},{"name":"royal","value":false}]}'
 }
 
-setupTable
+setupEnvironmentVariables
 
-echo $TABLE_CREATION
 
-while [ ! "$TABLE_CREATION" = '{"success":true}' ]; do
-  echo "Your Database details were invalid. Trying again:"
-  unset ASTRA_DB_ID
-  unset ASTRA_DB_REGION
-  unset ASTRA_DB_KEYSPACE
-  unset ASTRA_DB_APPLICATION_TOKEN
-  setupTable
-done

@@ -1,56 +1,63 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { getCharacters } from "../lib/astra";
+import { getTopMovies } from "../lib/astraCollections";
 
-export default function Home({ characters }) {
+
+export default function Home({ movies, pageState, reviews }) {
+
+  const list = [];
+  var nextUrl = '?pageState=' + pageState;
+  for (const index in movies.data) {
+      if( index != null ){
+          var title = movies.data[index].title;
+          var src = movies.data[index].posterUrl;
+          var detailUrl = 'movie-details?movieId=' + index;
+          list.push(
+              <a href={detailUrl}>
+                  <div className="divTableCell alignCenter">
+                      <span className="movieCardTitle">{title}</span>
+                      <br/>
+                      <img src={src} alt={title} title={title}/>
+                  </div>
+              </a>
+
+          );
+      }
+  }
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>AstraDB - movie rating app</title>
+        <link rel="icon" href="/public/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Simple Next.js +{" "}
-          <a href="https://astra.datastax.com/register">Astra</a> sample!
-        </h1>
-        <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-        <div className={styles.grid}>
-          {characters.map((character) => {
-            return (
-              <div key={character.id} className={styles.card}>
-                <h3>{character.name}</h3>
-                <p>
-                  <b>Actor:</b> {character.actor_name}
-                  <br />
-                  <b>House:</b> {character.house_name}
-                </p>
+
+        <div className="divTable">
+
+
+              <div className="divTableBody">
+                <div className="divTableRow"> {list}</div>
+                  <div class="nextNav"><a href ={nextUrl}>next</a></div>
               </div>
-            );
-          })}
+
+
+
         </div>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+
     </div>
   );
 }
 
-export async function getStaticProps({ preview = false }) {
-  const characters = (await getCharacters()) || [];
+export async function getServerSideProps({ preview = false , query}) {
+  var pageState = query.pageState;
+  //var pageState = null;
+  const movies = (await getTopMovies(pageState, 3)) || [];
+  pageState = movies.pageState;
+  //console.log(movies);
   return {
-    props: { characters, preview },
+    props: { movies, pageState }
   };
 }

@@ -111,3 +111,7 @@ Let's do some initial setup by creating a serverless(!) database.
 5. Click visit to view your live app:
 ![image](https://user-images.githubusercontent.com/3254549/89590361-9208c480-d7fc-11ea-9692-92fc3e71b1ad.png)
 <!--- ENDEXCLUDE --->
+
+Troubleshooting
+
+npm install @astrajs/collections
