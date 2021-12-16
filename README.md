@@ -23,7 +23,7 @@ A sample Next.js + [DataStax Astra DB](https://dtsx.io/3BzlUQU) starter app that
 To use the development Next.js app, you will need to create an .env.local file to store your connection information.
 
 (*sample*)
-```aidl
+```shell
 DS_NAMESPACE = 'movies'
 DS_COLLECTION_NAME = 'moviecatalog'
 ASTRA_DB_ID = <your DB ID>
