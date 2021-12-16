@@ -83,6 +83,7 @@ export default function Home({ movie, reviews, users, movieId}) {
 export async function getServerSideProps({ preview = false , query}) {
     var movieId = query.movieId;
     const movie = (await getMovieDetails(movieId)) || [];
+    console.log(movie);
     if(query.selScore != null) {
         const status = addReview(movie.movie_id, query.selUser, query.selScore)
     }
